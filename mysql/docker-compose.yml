@@ -7,8 +7,9 @@ services:
         privileged: true
         volumes:
             - ../var_etc/mysql_conf/my.cnf:/etc/my.cnf:rw
-            - ../../wwwdata-docker/mysql_data/:/var/lib/mysql/:rw
-            - ../../wwwdata-docker/wwwlogs/mysql_logs/error.log:/var/log/mysqld.log:rw
+            - ../../wwwdata-docker:/wwwdata:rw
+            #- ../../wwwdata-docker/mysql_data:/var/lib/mysql:rw
+            #- ../../wwwdata-docker/wwwlogs/mysql_logs/error.log:/var/log/mysqld.log:rw
         environment:
             - MYSQL_RANDOM_ROOT_PASSWORD=yes
             - MYSQL_ONETIME_PASSWORD=yes
