@@ -1,0 +1,67 @@
+version: '2'
+services:
+    mysql:
+        image: mysql:latest
+        hostname: mysql-server
+        container_name: mysql-server
+        privileged: true
+        restart: always
+        volumes:
+            - ../var_etc/mysql_conf/my.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:rw
+            # - ../var_etc/mysql_conf/MYSQL_ROOT_PASSWORD.txt:/tmp/MYSQL_ROOT_PASSWORD.txt
+            - ../../wwwdata-docker:/wwwdata:rw
+        environment:
+            # - MYSQL_RANDOM_ROOT_PASSWORD=yes
+            - MYSQL_ROOT_PASSWORD=the_root_pw
+            # - MYSQL_ROOT_PASSWORD=/tmp/MYSQL_ROOT_PASSWORD.txt
+            # - MYSQL_ONETIME_PASSWORD=yes
+            # - MYSQL_DATABASE=test_db_name
+            # - MYSQL_USER=test_db_user
+            # - MYSQL_PASSWORD=test_db_password
+        expose:
+            - "3306"
+    redis:
+        build: ../redis
+        hostname: redis-server
+        container_name: redis-server
+        volumes:
+        - ../var_etc/redis-conf/redis.conf:/usr/local/etc/redis/redis.conf
+        - ../../wwwdata-docker/:/wwwdata/:rw
+        links:
+            - mysql:mysql
+        restart: always
+        expose:
+            - "6379"
+    phpfpm:
+        build: ../phpfpm
+        hostname: phpfpm-server
+        container_name: phpfpm-server
+        volumes:
+            - ../../wwwdata-docker:/wwwdata:rw
+        links:
+            - mysql:mysql
+            - redis:redis
+        restart: always
+        expose:
+            - "9000"
+    nginx:
+        build: ../nginx
+        hostname: nginx-server
+        container_name: nginx-server
+        restart: always
+        volumes:
+            - ../var_etc/nginx_conf/nginx.conf:/etc/nginx/nginx.conf:rw
+            - ../var_etc/nginx_conf/conf.d:/etc/nginx/conf.d/
+            - ../var_etc/nginx_conf/ssl:/etc/nginx/ssl
+            - ../var_etc/nginx_conf/rewrite_conf:/etc/nginx/rewrite_conf/:rw
+            - ../../wwwdata-docker/:/wwwdata/:rw
+        links:
+            - mysql:mysql
+            - phpfpm:phpfpm
+            - redis:redis
+        ports:
+            - "80:80"
+            - "443:443"
+        expose:
+            - "443"
+            - "80"
