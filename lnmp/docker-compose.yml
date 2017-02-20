@@ -24,8 +24,8 @@ services:
         hostname: redis-server
         container_name: redis-server
         volumes:
-        - ../var_etc/redis-conf/redis.conf:/usr/local/etc/redis/redis.conf
-        - ../../wwwdata-docker/:/wwwdata/:rw
+            - ../var_etc/redis-conf/redis.conf:/usr/local/etc/redis/redis.conf:rw
+            - ../../wwwdata-docker/:/wwwdata/:rw
         links:
             - mysql:mysql
         expose:
