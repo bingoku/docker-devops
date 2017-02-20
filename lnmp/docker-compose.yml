@@ -23,6 +23,7 @@ services:
         build: ../redis
         hostname: redis-server
         container_name: redis-server
+        privileged: true
         volumes:
             - ../var_etc/redis-conf/redis.conf:/usr/local/etc/redis/redis.conf:rw
             - ../../wwwdata-docker/:/wwwdata/:rw
@@ -32,6 +33,7 @@ services:
             - "6379"
     phpfpm:
         build: ../phpfpm
+        privileged: true
         hostname: phpfpm-server
         container_name: phpfpm-server
         volumes:
@@ -43,6 +45,7 @@ services:
             - "9000"
     nginx:
         build: ../nginx
+        privileged: true
         hostname: nginx-server
         container_name: nginx-server
         volumes:
