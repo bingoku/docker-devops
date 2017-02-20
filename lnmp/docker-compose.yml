@@ -5,7 +5,6 @@ services:
         hostname: mysql-server
         container_name: mysql-server
         privileged: true
-        restart: always
         volumes:
             - ../var_etc/mysql_conf/my.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:rw
             # - ../var_etc/mysql_conf/MYSQL_ROOT_PASSWORD.txt:/tmp/MYSQL_ROOT_PASSWORD.txt
@@ -29,7 +28,6 @@ services:
         - ../../wwwdata-docker/:/wwwdata/:rw
         links:
             - mysql:mysql
-        restart: always
         expose:
             - "6379"
     phpfpm:
@@ -41,14 +39,12 @@ services:
         links:
             - mysql:mysql
             - redis:redis
-        restart: always
         expose:
             - "9000"
     nginx:
         build: ../nginx
         hostname: nginx-server
         container_name: nginx-server
-        restart: always
         volumes:
             - ../var_etc/nginx_conf/nginx.conf:/etc/nginx/nginx.conf:rw
             - ../var_etc/nginx_conf/conf.d:/etc/nginx/conf.d/
